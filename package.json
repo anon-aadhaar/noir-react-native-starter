@@ -19,6 +19,7 @@
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@tamagui/config": "^1.79.17",
+    "@anon-aadhaar/noir-core": "https://gitpkg.vercel.app/anon-aadhaar/anon-aadhaar-noir/js?160b6a3",
     "date-fns": "^3.0.6",
     "react": "18.2.0",
     "react-native": "^0.74.3",

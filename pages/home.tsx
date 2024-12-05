@@ -36,6 +36,18 @@ export default function Home() {
         }}>
         <Button
           onPress={() => {
+            navigation.navigate('AadhaarVerifierScreen');
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              fontWeight: '700',
+            }}>
+            Anon Aadhaar Circuits
+          </Text>
+        </Button>
+        <Button
+          onPress={() => {
             navigation.navigate('ProductProof');
           }}>
           <Text
