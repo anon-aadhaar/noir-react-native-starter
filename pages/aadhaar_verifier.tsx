@@ -24,6 +24,7 @@ export default function AadhaarVerifierScreen() {
     // First call this function to load the circuit and setup the SRS for it
     // Keep the id returned by this function as it is used to identify the circuit
     setupCircuit(circuit as Circuit).then(id => setCircuitId(id));
+
     return () => {
       if (circuitId) {
         // Clean up the circuit after the component is unmounted
@@ -63,8 +64,6 @@ export default function AadhaarVerifierScreen() {
   const onVerifyProof = async () => {
     setVerifyingProof(true);
     try {
-      // No need to provide the circuit here, as it was already loaded
-      // during the proof generation
       const verified = await verifyProof(
         proofAndInputs,
         vkey,
@@ -85,12 +84,27 @@ export default function AadhaarVerifierScreen() {
 
   return (
     <View>
-      <Button
-        onPress={async () => {
-          await onGenerateProof();
-        }}
-        title="Anon Aadhaar Circuits"
-      />
+      {circuitId ? (
+        <Button
+          onPress={async () => {
+            await onGenerateProof();
+          }}
+          disabled={generatingProof}
+          title={generatingProof ? 'Generating...' : 'Anon Aadhaar Circuits'}
+        />
+      ) : (
+        <Text>Loading circuit...</Text>
+      )}
+
+      {proof && (
+        <Button
+          onPress={async () => {
+            await onVerifyProof();
+          }}
+          disabled={verifyingProof}
+          title={verifyingProof ? 'Verifying...' : 'Verify Proof'}
+        />
+      )}
       <Text>aadhaar_verifier</Text>
     </View>
   );

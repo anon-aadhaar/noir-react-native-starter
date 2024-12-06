@@ -4,9 +4,6 @@ import React from 'react';
 import {TamaguiProvider} from 'tamagui';
 import Home from './pages/home';
 import {NavigationContainer} from '@react-navigation/native';
-import ProductProof from './pages/product-proof';
-import PedersenProof from './pages/pedersen-proof';
-import Secp256r1Proof from './pages/secp256r1-proof';
 import AadhaarVerifierScreen from './pages/aadhaar_verifier';
 
 const Stack = createNativeStackNavigator();
@@ -21,13 +18,10 @@ function App(): React.JSX.Element {
             headerShown: false,
           }}>
           <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="ProductProof" component={ProductProof} />
           <Stack.Screen
             name="AadhaarVerifierScreen"
             component={AadhaarVerifierScreen}
           />
-          <Stack.Screen name="PedersenProof" component={PedersenProof} />
-          <Stack.Screen name="Secp256r1Proof" component={Secp256r1Proof} />
         </Stack.Navigator>
       </NavigationContainer>
     </TamaguiProvider>

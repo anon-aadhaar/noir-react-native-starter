@@ -25,10 +25,10 @@ export default function Home() {
           textAlign: 'center',
           color: '#6B7280',
         }}>
-        This application shows you how to use Noir to generate ZK proofs
-        natively in iOS and Android with React Native.{'\n\n'}
-        Click on the button below to try out the demo and generate your first ZK
-        proof straight from your phone!
+        This application shows you how to use Noir to generate ZK proofs for
+        anon-aadhaar protocol{'\n\n'}
+        Click on the button below to try out the demo and generate your Aadhaar
+        ZK Proof first ZK proof straight from your phone!
       </Text>
       <View
         style={{
@@ -44,42 +44,6 @@ export default function Home() {
               fontWeight: '700',
             }}>
             Anon Aadhaar Circuits
-          </Text>
-        </Button>
-        <Button
-          onPress={() => {
-            navigation.navigate('ProductProof');
-          }}>
-          <Text
-            style={{
-              color: 'white',
-              fontWeight: '700',
-            }}>
-            Proof of product
-          </Text>
-        </Button>
-        <Button
-          onPress={() => {
-            navigation.navigate('PedersenProof');
-          }}>
-          <Text
-            style={{
-              color: 'white',
-              fontWeight: '700',
-            }}>
-            Proof of Pedersen Hash
-          </Text>
-        </Button>
-        <Button
-          onPress={() => {
-            navigation.navigate('Secp256r1Proof');
-          }}>
-          <Text
-            style={{
-              color: 'white',
-              fontWeight: '700',
-            }}>
-            Proof of secp256r1
           </Text>
         </Button>
       </View>
