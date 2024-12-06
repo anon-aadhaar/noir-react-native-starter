@@ -1,34 +1,86 @@
-import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import TEST_INPUT from '../lib/const';
+import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import circuit from '../circuits/aadhaar_qr_verifier/target/aadhaar_qr_verifier.json';
-import {clearCircuit, generateProof, setupCircuit} from '../lib/noir';
+import TEST_INPUT from '../lib/const';
+import {
+  clearCircuit,
+  extractProof,
+  generateProof,
+  setupCircuit,
+  verifyProof,
+} from '../lib/noir';
 import {Circuit} from '../types';
 
 export default function AadhaarVerifierScreen() {
   const [generatingProof, setGeneratingProof] = useState(false);
+  const [proofAndInputs, setProofAndInputs] = useState('');
   const [provingTime, setProvingTime] = useState(0);
+  const [vkey, setVkey] = useState('');
+  const [proof, setProof] = useState('');
+  const [verifyingProof, setVerifyingProof] = useState(false);
+  const [circuitId, setCircuitId] = useState<string>();
+
+  useEffect(() => {
+    // First call this function to load the circuit and setup the SRS for it
+    // Keep the id returned by this function as it is used to identify the circuit
+    setupCircuit(circuit as Circuit).then(id => setCircuitId(id));
+    return () => {
+      if (circuitId) {
+        // Clean up the circuit after the component is unmounted
+        clearCircuit(circuitId!);
+      }
+    };
+  }, []);
+
   const onGenerateProof = async () => {
     setGeneratingProof(true);
     try {
-      let circuitid = await setupCircuit(circuit as Circuit);
+      if (!circuitId) {
+        throw new Error('Circuit not set up');
+      }
 
       console.log('Generating proof');
       const start = Date.now();
-      const {proofWithPublicInputs} = await generateProof(
+      const {proofWithPublicInputs, vkey: _vkey} = await generateProof(
         TEST_INPUT,
-        circuitid,
+        circuitId!,
         'honk',
       );
 
-      console.log('Proof generated', proofWithPublicInputs);
       const end = Date.now();
       setProvingTime(end - start);
+
+      setVkey(_vkey);
+      setProofAndInputs(JSON.stringify(proofWithPublicInputs));
+      setProof(extractProof(circuit as Circuit, proofWithPublicInputs));
     } catch (err: any) {
       Alert.alert('Something went wrong', JSON.stringify(err));
       console.error(err);
     }
     setGeneratingProof(false);
+  };
+
+  const onVerifyProof = async () => {
+    setVerifyingProof(true);
+    try {
+      // No need to provide the circuit here, as it was already loaded
+      // during the proof generation
+      const verified = await verifyProof(
+        proofAndInputs,
+        vkey,
+        circuitId!,
+        'honk',
+      );
+      if (verified) {
+        Alert.alert('Verification result', 'The proof is valid!');
+      } else {
+        Alert.alert('Verification result', 'The proof is invalid');
+      }
+    } catch (err: any) {
+      Alert.alert('Something went wrong', JSON.stringify(err));
+      console.error(err);
+    }
+    setVerifyingProof(false);
   };
 
   return (
